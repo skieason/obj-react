@@ -1,0 +1,35 @@
+#page {
+	width: 1200px;
+	margin: 30px auto;
+}
+.job-applicants {
+	width: 100%;
+	border: 1px solid black;
+}
+.job-name {
+	text-align: center;
+}
+.applicant-name {
+	width: 150px;
+}
+
+table {
+  border-collapse: collapse;
+}
+  table td, table th {
+  border: 1px solid black;
+}
+table tr:first-child th {
+  border-top: 0;
+}
+table tr:last-child td {
+  border-bottom: 0;
+}
+table tr td:first-child,
+table tr th:first-child {
+  border-left: 0;
+}
+table tr td:last-child,
+table tr th:last-child {
+  border-right: 0;
+}
