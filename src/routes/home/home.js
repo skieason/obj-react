@@ -20,11 +20,10 @@ class Home extends React.Component {
 
 	getTotals() {
 		axios.get('http://localhost:4000/totals')
-		.then(res => {
-			console.log(res.data.data[0]);
+		.then(response => {
 			this.setState({
-				totalCandidates: res.data.data[0].candidates,
-				totalSkills: res.data.data[0].unique_skills,
+				totalCandidates: response.data.payload.candidates,
+				totalSkills: response.data.payload.unique_skills,
 			});
 		})
 	}
@@ -38,19 +37,18 @@ class Home extends React.Component {
 	}
 
 	getCandidates() {
-		console.log('hi there api request.');
 		axios.get('http://localhost:4000/candidates')
-    	.then(res => {
-    		res.data.data.map((candidate, index) => {
+    	.then(response => {
+    		response.data.payload.map((candidate, index) => {
     			candidate.skills = candidate.skills.split(',');
     			candidate.skillCount = candidate.skills.length;
-    			if (index === 0 || candidate.job_name !== res.data.data[index - 1].job_name) {
+    			if (index === 0 || candidate.job_name !== response.data.payload[index - 1].job_name) {
     				candidate.printJobName = true;
-    				candidate.jobRows = this.getRowsForJobTitle(candidate, index, res.data.data);
+    				candidate.jobRows = this.getRowsForJobTitle(candidate, index, response.data.payload);
     			}
+    			return candidate;
     		});
-    		console.log('attempt',res.data.data);
-    		this.setState({candidates: res.data.data});
+    		this.setState({candidates: response.data.payload});
     	});
 	}
 
@@ -74,17 +72,19 @@ class Home extends React.Component {
 
 	renderCandidateRows() {
 		return this.state.candidates.map((candidate, index) => {
-			return 	<React.Fragment key={candidate.id}>
-						<tr>
-							{this.renderJobName(candidate, index)}
-							<td rowSpan={candidate.skills.length} className="applicant-name">{candidate.name}</td>
-							<td rowSpan={candidate.skills.length}><a href={candidate.email}>{candidate.email}</a></td>
-							<td rowSpan={candidate.skills.length}><a href={candidate.website}>{candidate.website}</a></td>
-							<td>{candidate.skills[0]}</td>
-							<td rowSpan={candidate.skills.length}>Deleniti debitis soluta magni ipsum perspiciatis in itaque eligendi. Modi quidem qui nisi autem vel. Iste non quia dolores quo excepturi corrupti et nobis.</td>
-						</tr>
-						{this.renderCandidateSkills(candidate.skills.slice(1))}
-					</React.Fragment>
+			return 	(
+				<React.Fragment key={candidate.id}>
+					<tr>
+						{this.renderJobName(candidate, index)}
+						<td rowSpan={candidate.skills.length} className="applicant-name">{candidate.name}</td>
+						<td rowSpan={candidate.skills.length}><a href={candidate.email}>{candidate.email}</a></td>
+						<td rowSpan={candidate.skills.length}><a href={candidate.website}>{candidate.website}</a></td>
+						<td>{candidate.skills[0]}</td>
+						<td rowSpan={candidate.skills.length}>Deleniti debitis soluta magni ipsum perspiciatis in itaque eligendi. Modi quidem qui nisi autem vel. Iste non quia dolores quo excepturi corrupti et nobis.</td>
+					</tr>
+					{this.renderCandidateSkills(candidate.skills.slice(1))}
+				</React.Fragment>
+			)
 		})
 	}
 
